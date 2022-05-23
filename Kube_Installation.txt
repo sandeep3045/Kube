@@ -1,2 +1,16 @@
 #Kubernetes Installation
 
+kubeadm is tool that simplyfy setup and installtion process 
+
+#set hostname 
+#Master
+sudo hostnamectl set-hostname k8s-control
+
+#Worker
+sudo hostnamectl set-hostname k8s-worker1
+
+sudo hostnamectl set-hostname k8s-worker2
+
+Edit hostname in /etc/hosts file
+
+
