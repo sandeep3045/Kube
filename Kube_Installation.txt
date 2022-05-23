@@ -13,4 +13,7 @@ sudo hostnamectl set-hostname k8s-worker2
 
 Edit hostname in /etc/hosts file
 
+set the IP and hostname for all worker and Master node
+
+
 
