@@ -1,1 +1,100 @@
 What is Namespace?
+
+In Kubernetes, namespaces provides a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces. Namespace-based scoping is applicable only for namespaced objects (e.g. Deployments, Services, etc) and not for cluster-wide objects (e.g. StorageClass, Nodes, PersistentVolumes, etc).
+
+When to Use Multiple Namespaces?
+
+Namespaces are intended for use in environments with many users spread across multiple teams, or projects. For clusters with a few to tens of users, you should not need to create or think about namespaces at all. Start using namespaces when you need the features they provide.
+
+Namespaces provide a scope for names. Names of resources need to be unique within a namespace, but not across namespaces. Namespaces cannot be nested inside one another and each Kubernetes resource can only be in one namespace.
+
+Namespaces are a way to divide cluster resources between multiple users (via resource quota).
+
+It is not necessary to use multiple namespaces to separate slightly different resources, such as different versions of the same software: use labels to distinguish resources within the same namespace.
+
+Command : kubectl get namespace
+
++++++++++++++++++++++++++++++++++++++++++
+
+NAME              STATUS   AGE
+default           Active   1d
+kube-node-lease   Active   1d
+kube-public       Active   1d
+kube-system       Active   1d
+
+Kubernetes starts with four initial namespaces:
+
+    default The default namespace for objects with no other namespace
+
+    kube-system The namespace for objects created by the Kubernetes system
+
+    kube-public This namespace is created automatically and is readable by all users (including those not authenticated). This namespace is mostly reserved for cluster usage, in case that some resources should be visible and readable publicly throughout the whole cluster. The public aspect of this namespace is only a convention, not a requirement.
+    kube-node-lease This namespace holds Lease objects associated with each node. Node leases allow the kubelet to send heartbeats so that the control plane can detect node failure
+
+
+
+Getting details about namespace:
+---------------------------------
+kubectl get pods --namespace <my-namespace>
+
+kubectl get pods --all-namespaces
+
+Create Namespace:
+------------------
+kubectl create namespace my-namespace
+
+
+
+#################################################################################
+LAB 
+#################################################################################
+
+
+cloud_user@k8s-control:~$ kubectl get namespace
+NAME              STATUS   AGE
+default           Active   28m
+kube-node-lease   Active   28m
+kube-public       Active   28m
+kube-system       Active   28m
+mobile-gateway    Active   28m
+oasis             Active   28m
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$ kubectl create namespace dev
+namespace/dev created
+cloud_user@k8s-control:~$ kubectl get pods --namespace dev
+No resources found in dev namespace.
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$ kubectl get pods -n mobile-gateway
+NAME            READY   STATUS    RESTARTS   AGE
+gateway-auth    1/1     Running   0          32m
+gateway-data    1/1     Running   0          32m
+gateway-users   1/1     Running   0          32m
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$
+cloud_user@k8s-control:~$ kubectl get pods --all-namespces
+Error: unknown flag: --all-namespces
+See 'kubectl get --help' for usage.
+cloud_user@k8s-control:~$ kubectl get pods --all-namespaces
+NAMESPACE        NAME                                       READY   STATUS    RESTARTS      AGE
+kube-system      calico-kube-controllers-566dc76669-mjsdd   1/1     Running   0             33m
+kube-system      calico-node-57jbb                          1/1     Running   0             33m
+kube-system      calico-node-7mh5t                          1/1     Running   1 (33m ago)   33m
+kube-system      coredns-64897985d-n5ff8                    1/1     Running   0             33m
+kube-system      coredns-64897985d-p9qzx                    1/1     Running   0             33m
+kube-system      etcd-k8s-control                           1/1     Running   0             33m
+kube-system      kube-apiserver-k8s-control                 1/1     Running   0             33m
+kube-system      kube-controller-manager-k8s-control        1/1     Running   0             33m
+kube-system      kube-proxy-vnh89                           1/1     Running   0             33m
+kube-system      kube-proxy-zjxm4                           1/1     Running   0             33m
+kube-system      kube-scheduler-k8s-control                 1/1     Running   0             33m
+mobile-gateway   gateway-auth                               1/1     Running   0             33m
+mobile-gateway   gateway-data                               1/1     Running   0             33m
+mobile-gateway   gateway-users                              1/1     Running   0             33m
+oasis            quark                                      1/1     Running   0             33m
+cloud_user@k8s-control:~$ vi /home/cloud_user/quark_namespace.txt
+cloud_user@k8s-control:~$ kubectl get pods --all-namespaces > /home/cloud_user/all_namespaces.txt
+cloud_user@k8s-control:~$ logout
